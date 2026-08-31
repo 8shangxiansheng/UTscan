@@ -124,7 +124,7 @@ src/UTscan/         主程序源码
     Forms/MainForm*.cs   主窗体 partial（Layout/Motion/Pulse/Daq/System/Menu/Logging/Connection/Shutdown）
     Forms/ScanForm*.cs   扫查窗体（ScanForm + ScanForm.UI 初始化拆分）
   Mock/             无硬件仿真
-DOCS/               文档（说明书/历程/接线/移植/架构/配置）
+DOCS/               文档（说明书/接线/硬件配置/部署清单）
 tests/UTscan.Tests/ 单元测试（327 用例）
 scripts/            发布/更新脚本
 ```
@@ -154,14 +154,10 @@ scripts/            发布/更新脚本
 
 ## 文档
 
-- 文档索引与引用关系：`DOCS/README.md`
-- 开发历程：`DOCS/开发历程总结-20260829.md`
 - 使用说明书：`DOCS/软件使用说明书-20260829.md`
 - 接线组装：`DOCS/接线组装指南.md`
-- 硬件移植：`DOCS/硬件移植使用说明.md`
-- 架构与重构：`DOCS/架构分析与重构建议.md`
-- 运动控制配置：`DOCS/运动控制配置说明.md`
-- 发布记录：`DOCS/RELEASE-NOTES.md`
+- 硬件配置：`DOCS/HARDWARE-CONFIG.md`
+- 现场部署：`DOCS/部署清单.txt`
 
 ---
 

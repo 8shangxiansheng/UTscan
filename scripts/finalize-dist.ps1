@@ -1,4 +1,4 @@
-﻿# UTscan dist finalizer (called by publish-self-contained.cmd)
+# UTscan dist finalizer (called by publish-self-contained.cmd)
 # Copies config/docs/drivers into the publish output, then generates
 # manifest.json (per-file SHA256) and version.json.
 # UTF-8 with BOM so PowerShell 5.1 reads the Chinese asset paths correctly.
@@ -24,8 +24,8 @@ Write-Host '[4a] copy hardware.json / docs / drivers ...'
 Copy-Item -LiteralPath (Join-Path $Root 'src/UTscan/hardware.json') -Destination (Join-Path $AppDir 'hardware.json') -Force
 
 $docTargets = @(
-    @{ src = 'docs/HARDWARE-CONFIG.md'; dst = 'HARDWARE-CONFIG.md' },
-    @{ src = 'docs/部署清单.txt';        dst = '部署清单.txt' }
+    @{ src = 'DOCS/HARDWARE-CONFIG.md'; dst = 'HARDWARE-CONFIG.md' },
+    @{ src = 'DOCS/部署清单.txt';        dst = '部署清单.txt' }
 )
 foreach ($t in $docTargets) {
     $s = Join-Path $Root $t.src
