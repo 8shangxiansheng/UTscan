@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <!-- 引用 WinForms 主工程，允许引用 WinForms 类型 -->
+    <UseWindowsForms>true</UseWindowsForms>
+    <!-- x86：主工程 PlatformTarget=x86（原生硬件 DLL 均 32 位），测试宿主须同为 32 位才能加载主程序集 -->
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
+    <PackageReference Include="xunit" Version="2.5.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3" />
+    <!-- DI 测试（DI_HardwareSwitch_* 用例）：主程序移除该包后由测试工程显式引用 -->
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\UTscan\UTscan.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,73 @@
+# =====================================================
+# UTscan .NET 项目 .gitignore
+# =====================================================
+
+# ---- 编译产物 ----
+bin/
+obj/
+out/
+publish/
+dist/
+
+# ---- Visual Studio ----
+.vs/
+*.user
+*.suo
+*.userprefs
+*.sln.docstates
+*.vsp
+*.vspx
+*.sap
+*.sapcache
+*.nupkg
+
+# ---- Rider / VS Code ----
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# ---- 测试结果 / 覆盖率 ----
+TestResults/
+coverage/
+*.coverage
+*.coveragexml
+
+# ---- NuGet ----
+*.nupkg
+*.snupkg
+packages/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# ---- 系统文件 ----
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# ---- 临时文件 ----
+*.tmp
+*.bak
+*.orig
+*.rej
+~$*
+*.log
+
+# ---- 用户私有 ----
+.workbuddy/memory/
+.workbuddy/manual_text.txt
+.workbuddy/extract_*.py
+
+# ---- 上传/导出数据（运行时生成） ----
+exports/
+captures/
+*.csv
+*.acf
+!src/UTscan/configs/*.acf    # 例外：保留示例配置
+
+# ---- 凭据/密钥（绝不提交） ----
+secrets.json
+*.env
+*.env.local
+appsettings.*.local.json

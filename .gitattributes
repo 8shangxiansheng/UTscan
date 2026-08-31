@@ -1,0 +1,22 @@
+# 统一行尾：文本文件用 LF，Windows 批处理/PS 除外
+* text=auto
+
+# 二进制 DLL 保持原样（不得转换行尾）
+*.dll binary
+*.exe binary
+*.png binary
+*.bmp binary
+*.ico binary
+*.bin binary
+
+# 脚本与源码使用 LF（跨平台一致）
+*.cs text eol=lf
+*.csproj text eol=lf
+*.sln text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.ps1 text eol=lf
+
+# Windows 批处理脚本保留 CRLF（cmd 兼容）
+*.cmd text eol=crlf
+*.bat text eol=crlf

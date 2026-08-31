@@ -1,0 +1,52 @@
+# Visual Studio / VS Code 编辑器配置
+# 让所有贡献者使用相同的代码风格
+
+root = true
+
+[*]
+charset = utf-8
+end_of_line = crlf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+max_line_length = 120
+
+[*.{cs,csproj,props,targets}]
+indent_size = 4
+
+[*.{json,yml,yaml,xml,md}]
+indent_size = 2
+
+[*.cmd]
+indent_size = 4
+
+# C# 命名规则（与 AI-DEV-GUIDE.md 一致）
+[*.cs]
+# 命名风格：PascalCase 类/方法/属性，_camelCase 字段
+dotnet_naming_rule.private_fields_underscore.severity = warning
+dotnet_naming_rule.private_fields_underscore.symbols = private_fields
+dotnet_naming_rule.private_fields_underscore.style = underscore_camel_case
+
+# 异步方法以 Async 结尾
+dotnet_naming_rule.async_methods_suffix.severity = warning
+dotnet_naming_rule.async_methods_suffix.symbols = async_methods
+dotnet_naming_rule.async_methods_suffix.style = end_in_async
+
+# 诊断建议
+dotnet_style_qualification_for_field = false:suggestion
+dotnet_style_qualification_for_property = false:suggestion
+dotnet_style_qualification_for_method = false:suggestion
+dotnet_style_qualification_for_event = false:suggestion
+
+# IDE0073 文件头
+dotnet_diagnostic.IDE0073.severity = none
+
+# 不允许 throw 表达式（保持一致性）
+csharp_style_throw_expression = false:suggestion
+
+# 可空性
+dotnet_style_readonly_field = true:suggestion
+
+# using 排序：System.* 在前，其他在后
+dotnet_sort_system_directives_first = true
+dotnet_separate_import_directive_groups = false

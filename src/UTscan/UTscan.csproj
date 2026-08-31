@@ -1,0 +1,54 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <!--
+      x86：全部原生硬件 DLL 均为 32 位（zauxdll/zmotion/spcm_win32/JSR_Common3264），
+      AnyCPU 进程无法加载会抛 BadImageFormatException。
+    -->
+    <PlatformTarget>x86</PlatformTarget>
+    <RootNamespace>UTscan</RootNamespace>
+    <AssemblyName>UTscan</AssemblyName>
+  </PropertyGroup>
+
+  <!-- 测试工程可访问 internal（JsrNative 常量/断连分类验证） -->
+  <ItemGroup>
+    <InternalsVisibleTo Include="UTscan.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- 审查 P1-7：ScottPlot/DI 曾被引用但主程序零使用，已移除（DI 由测试工程显式引用） -->
+    <!-- System.IO.Ports：DPR500 串口通信（Phase 3） -->
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
+    <PackageReference Include="System.IO.Ports" Version="8.0.0" />
+  </ItemGroup>
+
+  <!-- 原生硬件 DLL：复制到输出根目录（P/Invoke 默认搜索 exe 目录，非子目录）。
+       Link 元数据抹平相对路径——否则会被复制到 Hardware\NativeDlls\ 子目录导致加载失败。
+       DLL 均为 32 位，需 x86 进程。 -->
+  <ItemGroup>
+    <!-- ZMC 运动控制 -->
+    <None Include="Hardware\NativeDlls\zmotion.dll" Link="zmotion.dll" CopyToOutputDirectory="PreserveNewest" Condition="Exists('Hardware\NativeDlls\zmotion.dll')" />
+    <None Include="Hardware\NativeDlls\zauxdll.dll" Link="zauxdll.dll" CopyToOutputDirectory="PreserveNewest" Condition="Exists('Hardware\NativeDlls\zauxdll.dll')" />
+    <!-- Spectrum M3i.3242 采集卡（驱动 v4.0.13877 的 32 位 API DLL，P/Invoke 名称 spcm_win32.dll） -->
+    <None Include="Hardware\NativeDlls\spcm_win32.dll" Link="spcm_win32.dll" CopyToOutputDirectory="PreserveNewest" Condition="Exists('Hardware\NativeDlls\spcm_win32.dll')" />
+    <!-- H-11：JSR DPR500 SDK 固定依赖 DLL。P/Invoke 固定加载 JSR_Common3264.dll，它还依赖 DPRIO3.dll。
+         目录名 win-x64 与文件真实架构不一致——以 PE 头为准，仅复制 32 位文件（3264/DPRIO3，非 6464/DPRIO364）。
+         Link 元数据抹平路径到输出根目录（P/Invoke 默认搜索 exe 目录）。 -->
+    <None Include="Hardware\PulseGen\runtimes\win-x64\native\JSR_Common3264.dll" Link="JSR_Common3264.dll" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Condition="Exists('Hardware\PulseGen\runtimes\win-x64\native\JSR_Common3264.dll')" />
+    <None Include="Hardware\PulseGen\runtimes\win-x64\native\DPRIO3.dll" Link="DPRIO3.dll" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Condition="Exists('Hardware\PulseGen\runtimes\win-x64\native\DPRIO3.dll')" />
+    <!-- WD-Dask.dll（ADLink 旧 DAQ）已随迁移到 Spectrum 移除 -->
+  </ItemGroup>
+
+  <!-- 配置文件：复制到输出目录供运行时读取 -->
+  <ItemGroup>
+    <None Include="hardware.json" CopyToOutputDirectory="PreserveNewest" Condition="Exists('hardware.json')" />
+    <!-- users.json 已删除（审查报告 C-2：明文密码且 AuthService 不读取，凭据仅以 PBKDF2 哈希存于代码） -->
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,13 @@
+{
+  "ipAddress": "192.168.0.11",
+  "port": 502,
+  "serialPort": "COM1",
+  "baudRate": 4800,
+  "timeoutMs": 8000,
+  "sampleRate": 100000000,
+  "sampleCount": 1024,
+  "useMock": false,
+  "enableMotionController": false,
+  "triggerIo": -1,
+  "triggerPulseWidthMs": 5
+}
