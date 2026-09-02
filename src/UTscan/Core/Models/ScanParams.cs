@@ -24,6 +24,12 @@ public class ScanParams
     /// <summary>采样率（Hz）</summary>
     public float SampleRate { get; set; } = 100f;
 
+    /// <summary>
+    /// 扫查取数通道索引（0=CH0, 1=CH1；默认 0）。
+    /// 双通道采集时指定 C 扫成像使用哪个通道的数据；越界由 DAQ 层回退到默认通道。
+    /// </summary>
+    public int ChannelIndex { get; set; } = 0;
+
     /// <summary>扫查策略：走点-停-采 或 编码器触发连续扫查</summary>
     public ScanStrategy Strategy { get; set; } = ScanStrategy.PointByPoint;
 

@@ -256,7 +256,7 @@ public class ScanService : IScanEngine
                             throw new TimeoutException(
                                 $"外触发缺失：等待新帧超时（位置 X={x:F3}, Y={y:F3}）。请检查 DPR500 TRIG/SYNC → Spectrum EXT0 触发线");
                     }
-                    var data = _daq.GetCurrentData();
+                    var data = _daq.GetCurrentData(parameters.ChannelIndex);
                     completed++;
 
                     if (encoderTriggered)

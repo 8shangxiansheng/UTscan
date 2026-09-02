@@ -34,8 +34,11 @@ public interface IDataAcquisition : IDisposable
     /// </summary>
     Task ResetAsync();
 
-    /// <summary>获取当前A扫数据</summary>
+    /// <summary>获取当前A扫数据（默认通道）</summary>
     AScanData GetCurrentData();
+
+    /// <summary>获取指定通道的当前A扫数据（0=CH0, 1=CH1）</summary>
+    AScanData GetCurrentData(int channel);
 
     /// <summary>
     /// 当前已完成的帧计数（H-4 帧同步：扫查服务据此判断是否产生新帧）。

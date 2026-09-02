@@ -23,6 +23,7 @@ public partial class ScanForm : Form
     private ComboBox _cmbMode = null!;
     private ComboBox _cmbStrategy = null!;
     private ComboBox _cmbWaveType = null!;
+    private ComboBox _cmbChannel = null!;   // 双通道扫查取数通道（0=CH1, 1=CH2）
     private Button _btnStart = null!, _btnStop = null!, _btnPause = null!, _btnResume = null!, _btnSaveImage = null!, _btnResumeScan = null!;
     // P1-B：离线滤波（中值/低通）+ D 扫视图
     private Button _btnFilterMedian = null!, _btnFilterLowPass = null!, _btnDScan = null!;
@@ -198,7 +199,9 @@ public partial class ScanForm : Form
             // H-1 修复：TriggerIo 从 ConnectionConfig 传递到 ScanParams，
             // 修复真机严格单次触发路径不可达的接线断层。
             TriggerIo = _config.TriggerIo,
-            TriggerPulseWidthMs = _config.TriggerPulseWidthMs
+            TriggerPulseWidthMs = _config.TriggerPulseWidthMs,
+            // 双通道：扫查取数通道（0=CH1, 1=CH2）
+            ChannelIndex = _cmbChannel.SelectedIndex
         };
 
         _cts?.Dispose();
@@ -607,7 +610,8 @@ public partial class ScanForm : Form
             // D7-FIX（审查 20260828）：TriggerIo/脉宽随 .acf 持久化——触发配置来源单一化
             // （此前仅 hardware.json，.acf 加载不改变触发 IO，配置来源分裂）。
             TriggerIo = _config.TriggerIo,
-            TriggerPulseWidthMs = _config.TriggerPulseWidthMs
+            TriggerPulseWidthMs = _config.TriggerPulseWidthMs,
+            ChannelIndex = _cmbChannel.SelectedIndex   // 双通道：扫查取数通道持久化
         };
         cfg.ImagingMode = SelectedImagingMode();
         // D2：成像波形类型持久化（会话级，存于 Daq.WaveformType 供保存/加载一致性）

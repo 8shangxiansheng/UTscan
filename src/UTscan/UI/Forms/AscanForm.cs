@@ -37,6 +37,10 @@ public class AscanForm : Form
     // P0-B：波形类型选择（RF/检波/正半波/负半波）
     private ComboBox _cmbWaveType = null!;
 
+    // 双通道显示选择（0=CH0, 1=CH1；Spectrum M3i.3242 双通道）
+    private ComboBox _cmbChannel = null!;
+    private int _selectedChannel;
+
     // ── 新功能（20260828）：叠加/平均/滤波/游标/异常检测/回放 ──
     private readonly UTscan.Services.SignalProcessing.GateAnalyzer _analyzer = new();
     private CheckBox _chkOverlay = null!;
@@ -268,6 +272,20 @@ public class AscanForm : Form
         _numSyncThreshold = new NumericUpDown { Left = 536, Top = 71, Width = 60, Minimum = -10, Maximum = 10, Value = 0.5m, DecimalPlaces = 2, Increment = 0.1m };
         topPanel.Controls.Add(_numSyncThreshold);
 
+        // 双通道选择（CH0/CH1）
+        topPanel.Controls.Add(new Label { Text = "通道:", Left = 602, Top = 74, Width = 34, TextAlign = System.Drawing.ContentAlignment.MiddleRight });
+        _cmbChannel = new ComboBox { Left = 638, Top = 71, Width = 60, DropDownStyle = ComboBoxStyle.DropDownList };
+        _cmbChannel.Items.AddRange(new object[] { "CH1", "CH2" });
+        _cmbChannel.SelectedIndex = 0;
+        _cmbChannel.SelectedIndexChanged += (_, _) =>
+        {
+            _selectedChannel = _cmbChannel.SelectedIndex;
+            // 通道切换后立即刷新显示
+            _view.Data = _daq.GetCurrentData(_selectedChannel);
+            _view.Invalidate();
+        };
+        topPanel.Controls.Add(_cmbChannel);
+
         // ── 波形视图 ──
         _view = new WaveformView { Dock = DockStyle.Fill };
         // P1-A：全部数据闸门 + 同步闸门加入视图
@@ -299,7 +317,7 @@ public class AscanForm : Form
         };
         _chkAverage.CheckedChanged += (_, _) =>
         {
-            if (!_chkAverage.Checked) { _view.Data = _daq.GetCurrentData(); }
+            if (!_chkAverage.Checked) { _view.Data = _daq.GetCurrentData(_selectedChannel); }
             else { _averageWindow.Clear(); }
             _view.Invalidate();
         };
@@ -613,7 +631,7 @@ public class AscanForm : Form
     /// <summary>1/2-FIX：当前数据帧的总时长（µs）；无有效数据时返回 0。</summary>
     private float GetWindowTotalUs()
     {
-        var d = _view.Data ?? _daq.GetCurrentData();
+        var d = _view.Data ?? _daq.GetCurrentData(_selectedChannel);
         if (d is { PointCount: > 1, SampleRate: > 0 })
             return d.PointCount / d.SampleRate * 1e6f;
         return 0f;
@@ -693,7 +711,7 @@ public class AscanForm : Form
         _view.StartTimeUs = 0;
 
         // 取当前帧的实际总时长，设为采样长控件值（显示全范围）
-        var d = _daq.GetCurrentData();
+        var d = _daq.GetCurrentData(_selectedChannel);
         float totalUs = 0;
         if (d is { PointCount: > 1, SampleRate: > 0 })
         {
@@ -730,7 +748,7 @@ public class AscanForm : Form
     /// <summary>兼容旧调用（无参）：从当前帧读取总时长（可能为空，供其他调用方）。</summary>
     public void SyncSampleLengthToAcquisition()
     {
-        var d = _daq.GetCurrentData();
+        var d = _daq.GetCurrentData(_selectedChannel);
         if (d is { PointCount: > 1, SampleRate: > 0 })
             SyncSampleLengthToAcquisition(d.PointCount / d.SampleRate * 1e6f);
     }
@@ -768,7 +786,7 @@ public class AscanForm : Form
         {
             // M-2：无论新帧是否为空，都推进已处理帧计数，避免对同一空帧反复拉取。
             _lastFrameCount = frameCount;
-            var data = _daq.GetCurrentData();
+            var data = _daq.GetCurrentData(_selectedChannel);
             if (data.PointCount > 0)
             {
                 // 历史缓冲（P2）：写入环形缓冲供回放
@@ -961,7 +979,7 @@ public class AscanForm : Form
         }
         else
         {
-            _view.Data = _daq.GetCurrentData();
+            _view.Data = _daq.GetCurrentData(_selectedChannel);
         }
         _btnPlayback.Text = _playbackMode ? "实时" : "回放";
         _btnPlaybackPrev.Enabled = _btnPlaybackNext.Enabled = _playbackMode && _historyBuffer.Count > 0;

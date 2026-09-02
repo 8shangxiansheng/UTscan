@@ -68,6 +68,8 @@ public class MockDaqCard : IDataAcquisition
         lock (_lock) { return _currentData; }
     }
 
+    public AScanData GetCurrentData(int channel) => GetCurrentData();
+
     // H-4：帧同步（与真机 SpectrumDaqCard 语义一致）
     private long _frameCounter;
     private readonly System.Threading.ManualResetEventSlim _frameEvent = new(false);

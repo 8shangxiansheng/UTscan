@@ -80,6 +80,17 @@ public partial class ScanForm : Form
         leftPanel.Controls.Add(_cmbWaveType);
         y += 30;
 
+        // 双通道扫查取数通道选择（CH1/CH2）
+        leftPanel.Controls.Add(new Label { Text = "采集通道:", Left = 10, Top = y, Width = 100, TextAlign = System.Drawing.ContentAlignment.MiddleLeft });
+        _cmbChannel = new ComboBox
+        {
+            Left = 115, Top = y - 3, Width = 120, DropDownStyle = ComboBoxStyle.DropDownList,
+            Items = { "CH1", "CH2" }
+        };
+        _cmbChannel.SelectedIndex = 0;
+        leftPanel.Controls.Add(_cmbChannel);
+        y += 30;
+
         // ── 批次2：颜色条选择 + 显示范围（说明书 3.3.5 / 3.11 色带设置）──
         leftPanel.Controls.Add(new Label { Text = "颜色条:", Left = 10, Top = y, Width = 100, TextAlign = System.Drawing.ContentAlignment.MiddleLeft });
         _cmbColormap = new ComboBox
